@@ -1,0 +1,98 @@
+# Didn't check arguments for null values
+# output: project id, package.className.methodName (.className for default packages).
+
+p: Project = input;
+#out: output collection[string][int] of int;
+out: output top(300) of string weight int;
+package: string = "";
+class: string = "";
+variables: set of string;
+
+types := 0;
+counts := 0;
+countPerType := 0;
+length := 0;
+
+isPrimitive:= function(s: string) : bool{
+	        if(
+    			    match(`^int$`, s)||
+    			    match(`^long$`, s)||
+    			    match(`^String$`, s)||
+    			    match(`^byte$`, s)||
+    			    match(`^short$`, s)||
+    			    match(`^boolean$`, s)||
+    			    match(`^char$`, s)
+			    )
+	            return true;
+	            return false;
+        };
+#if(1==-1)
+#out["-1"][0] << 0;
+
+visit(p, visitor {
+	before node: CodeRepository -> {
+		# only look at the latest snapshot
+		# and only include Java files
+		snapshot := getsnapshot(node, "SOURCE_JAVA_JLS");
+			foreach (i: int; def(snapshot[i])){
+			visit(snapshot[i]);
+			}
+
+		snapshotJS:=getsnapshot(node, "OTHER");
+			foreach (i: int; def(snapshotJS[i])){
+			visit(snapshotJS[i]);
+			}
+
+		stop;
+	}
+	
+	before node: Namespace -> {
+	    package = node.name;
+	}
+	    
+	before node: Declaration -> {
+		if (node.kind == TypeKind.CLASS) {
+		    class = node.name;
+		    
+		    foreach (i: int; node.methods[i]){
+			    visit(node.methods[i], visitor {
+			        before node: Method ->{
+			            foreach(j: int; node.arguments[j]){
+			                visit(node.arguments[j]);
+			            }
+			            length = len(variables);
+			            if(length!=0){
+			                counts++;
+			                countPerType++;
+			                #out[p.id] << package + "." + class + "." + node.name;
+			            }
+			            stop;
+			        }
+			        before node: Variable ->{
+			            if(!isPrimitive(node.variable_type.name)){
+			                add(variables, node.name);
+			            }
+			        }
+			        before node: Statement -> {
+	                	if (node.kind == StatementKind.IF)
+			            visit(node.expression, visitor {
+            				before node: Expression ->
+            					if (node.kind == ExpressionKind.EQ || node.kind == ExpressionKind.NEQ)
+            						exists (k: int; isliteral(node.expressions[k], "null"))
+            						    foreach(l: int; node.expressions[l])
+            							    remove(variables, node.expressions[l].literal);
+            			});
+			        }
+			    });
+		    }
+		    
+		    if (length != 0)
+		        types++;
+		}
+		out << node.name weight countPerType;
+		countPerType=0;
+	}
+});
+
+#if (types != 0)
+#    out[p.project_url][types] << (counts/types);
