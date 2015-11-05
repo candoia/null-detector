@@ -1,6 +1,6 @@
 {
   "name": "null-detector",
-  "productName": "Null Detector.",
+  "productName": "Null Detector",
   "version": "0.1.0",
   "author": "Nitin Mukesh Tiwari <nmtiwari@iastate.edu>",
   "description": "Checks the improper use of null.",
@@ -10,7 +10,7 @@
     "url": "https://github.com/candoia/null-detector"
   },
   "icon": {
-	"type": "fa",
-	"name": "pie-chart"
+    "type": "fa",
+    "name": "thumb-tack"
   }
 }
