@@ -1,15 +1,18 @@
+<!doctype html>
 <html>
   <head>
-    <link rel='stylesheet' type='text/css' href='../../env/src/css/font-awesome.min.css'>
-    <link rel='stylesheet' type='text/css' href='./app.css'>
+    <link rel='stylesheet' type='text/css' href='../../css/font-awesome.css'>
     <style>
-      table, th, td {
-          border: 1px solid black;
-          border-collapse: collapse;
+      .things {
+        width: 90%;
+        margin: 8px auto;
       }
-      th, td {
-          padding: 5px;
-          text-align: left;
+      table {
+        width : 100%;
+      }
+      table td, table th {
+        text-align: left;
+        padding: 4px;
       }
     </style>
   </head>
@@ -20,24 +23,25 @@
         <span id='status'>Running Boa Query</span>
       </div>
 
-      <div style='text-align: left;' id='content'>
-      <div id='table-output'>
-          <table style="width:85%">
-            <tbody id='table-output-body'>
+      <div id='content' hidden="hidden">
+        <div id='table-output'>
+          <table style="">
+            <thead>
               <tr>
-                <th>#</th>
-                <th>Type</th>
-                <th># of violations</th>
+                <th></th>
+                <th>Detail</th>
+                <th>Total</th>
               </tr>
+            </thead>
+            <tbody id='table-output-body'>
+
             </tbody>
           </table>
+        </div>
       </div>
-    </div>
     </div>
     <script src="../../shared/jquery.min.js"></script>
     <script src="../../shared/chart.min.js"></script>
-    <script src="../../shared/underscore.min.js"></script>
-    <script src="./lib/color-scheme.min.js"></script>
     <script src="./main.js"></script>
   </body>
 </html>

@@ -1,7 +1,7 @@
 {
   "name": "null-detector",
   "productName": "Null Detector",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Nitin Mukesh Tiwari <nmtiwari@iastate.edu>",
   "description": "Checks the improper use of null.",
   "main": "main.html",
